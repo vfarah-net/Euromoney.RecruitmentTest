@@ -6,5 +6,6 @@ namespace Domain.Resolvers
     {
         int GetBadWordCount(string content);
         void AddBadWords(params BadWord[] badWords);
+        string Filter(string content);
     }
 }

@@ -19,7 +19,6 @@ namespace Domain.Windsor
                     Component.For<IRepository<BadWord>>()
                     .ImplementedBy<SimpleRepository<BadWord>>()
                     .LifestyleSingleton()
-
                     );
         }
     }

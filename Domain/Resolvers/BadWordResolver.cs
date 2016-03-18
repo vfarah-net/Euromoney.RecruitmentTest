@@ -7,11 +7,11 @@ namespace Domain.Resolvers
 {
     public class BadWordResolver : IBadWordResolver
     {
-        private readonly IRepository<BadWord> negativeWordDataRepository;
+        private readonly IRepository<BadWord> badWordsRepository;
 
-        public BadWordResolver(IRepository<BadWord> negativeWordDataRepository)
+        public BadWordResolver(IRepository<BadWord> badWordsRepository)
         {
-            this.negativeWordDataRepository = negativeWordDataRepository;
+            this.badWordsRepository = badWordsRepository;
         }
 
         public int GetBadWordCount(string content)
@@ -22,7 +22,8 @@ namespace Domain.Resolvers
                 return badWords;
             }
 
-            return negativeWordDataRepository.GetAll().Count(negativeWord => content.Contains(negativeWord.Name));
+            return badWordsRepository.GetAll()
+                .Count(negativeWord => content.Contains(negativeWord.Name));
         }
 
         public void AddBadWords(params BadWord[] badWords)
@@ -32,10 +33,27 @@ namespace Domain.Resolvers
                 throw new ArgumentNullException(nameof(badWords));
             }
 
-            foreach (var badWord in badWords.Where(badWord => !negativeWordDataRepository.Contains(item => item.Name.Equals(badWord.Name, StringComparison.OrdinalIgnoreCase))))
+            foreach (
+                var badWord in
+                    badWords.Where(
+                        badWord =>
+                            !badWordsRepository.Contains(
+                                item => item.Name.Equals(badWord.Name, StringComparison.OrdinalIgnoreCase))))
             {
-                negativeWordDataRepository.Add(badWord);
+                badWordsRepository.Add(badWord);
             }
+        }
+
+        public string Filter(string content)
+        {
+            if (content == null)
+            {
+                throw new ArgumentNullException(nameof(content));
+            }
+
+            return badWordsRepository.GetAll()
+                .Where(negativeWord => content.Contains(negativeWord.Name))
+                .Aggregate(content, (current, badWord) => current.Replace(badWord.Name, badWord.FilterName));
         }
     }
 }

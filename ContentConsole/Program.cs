@@ -16,7 +16,7 @@ namespace ContentConsole
             InitializeMandatoryBadWords(badWordResolver);
             int badWordsCount = badWordResolver.GetBadWordCount(content);
             Console.WriteLine("Scanned the text:");
-            Console.WriteLine(content);
+            Console.WriteLine(badWordResolver.Filter(content));
             Console.WriteLine("Total Number of negative words: " + badWordsCount);
             Console.WriteLine("Press ANY key to exit.");
             Console.ReadKey();
@@ -25,10 +25,10 @@ namespace ContentConsole
         private static void InitializeMandatoryBadWords(IBadWordResolver badWordResolver)
         {
             badWordResolver.AddBadWords(
-                new BadWord { Name = "swine" },
-                new BadWord { Name = "bad" },
-                new BadWord { Name = "nasty" },
-                new BadWord { Name = "horrible" });
+                new BadWord { Name = "swine", FilterName = "s###e" },
+                new BadWord { Name = "bad", FilterName = "b##" },
+                new BadWord { Name = "nasty", FilterName = "n###y" },
+                new BadWord { Name = "horrible", FilterName = "h######e" });
         }
     }
 

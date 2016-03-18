@@ -121,9 +121,9 @@ namespace Domain.Test.Unit.Resolvers
 
             [Test]
             public void AddBadWords_WhenAddingValidBadWord_ShouldAddBadWordToDataStore()
-            {                
+            {
                 // Arrange
-                
+
                 IBadWordResolver subject = fixture.Create<BadWordResolver>();
 
                 // Act
@@ -131,7 +131,45 @@ namespace Domain.Test.Unit.Resolvers
 
                 // Assert
                 negativeWordRepositoryMock.Verify(x => x.Add(It.IsIn(badWord)), Times.Once);
-            }           
+            }
+        }
+
+        [TestFixture]
+        private class FilterTestFixture : BadWordResolverTestFixture
+        {
+            private string content;
+            private string filter;
+            private IEnumerable<BadWord> negativeWords;
+
+            [SetUp]
+            public void SetUp()
+            {
+                content = fixture.Create<string>();
+                filter = fixture.Create<string>();
+                negativeWords = fixture.CreateMany<BadWord>();
+                negativeWordRepositoryMock.Setup(x => x.GetAll())
+                    .Returns(() => negativeWords.ToList());
+            }
+
+            [Test]
+            public void Filter_WhenFilteringContentWithBadWords_ShouldReturnFilteredContent()
+            {
+                // Arrange
+                negativeWords = new List<BadWord>
+                {
+                    fixture.Build<BadWord>()
+                        .With(x => x.Name, content)
+                        .With(x => x.FilterName, filter)
+                        .Create()
+                };
+                IBadWordResolver subject = fixture.Create<BadWordResolver>();
+
+                // Act
+                var actual = subject.Filter(content);
+
+                // Assert
+                Assert.That(actual, Is.EqualTo(filter));
+            }
         }
     }
 }
