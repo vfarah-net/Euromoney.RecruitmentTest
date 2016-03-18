@@ -8,7 +8,6 @@ namespace ContentConsole
 {
     public static class Program
     {
-        //TODO: Refactor this so tests can be written
         public static void Main(string[] args)
         {
             bool ignoreFilter = args.Contains("/ignorefiltering", StringComparer.OrdinalIgnoreCase) ||
@@ -28,10 +27,10 @@ namespace ContentConsole
         private static void InitializeMandatoryBadWords(IBadWordResolver badWordResolver)
         {
             badWordResolver.AddBadWords(
-                new BadWord { Name = "swine", FilterName = "s###e" },
-                new BadWord { Name = "bad", FilterName = "b##" },
-                new BadWord { Name = "nasty", FilterName = "n###y" },
-                new BadWord { Name = "horrible", FilterName = "h######e" });
+                new BadWord { Name = "swine" },
+                new BadWord { Name = "bad"},
+                new BadWord { Name = "nasty"},
+                new BadWord { Name = "horrible" });
         }
     }
 

@@ -24,8 +24,8 @@ namespace Domain.Test.Unit.Resolvers
             negativeWordRepositoryMock = fixture.Freeze<Mock<IRepository<BadWord>>>();
         }
 
-        [TestFixtureTearDown]
-        public void TearDownFixture()
+        [TearDown]
+        public void TearDown()
         {
             negativeWordRepositoryMock.ResetCalls();
         }
@@ -137,29 +137,27 @@ namespace Domain.Test.Unit.Resolvers
         [TestFixture]
         private class FilterTestFixture : BadWordResolverTestFixture
         {
-            private string content;
-            private string filter;
+            private string content;            
             private IEnumerable<BadWord> negativeWords;
 
             [SetUp]
             public void SetUp()
             {
                 content = fixture.Create<string>();
-                filter = fixture.Create<string>();
                 negativeWords = fixture.CreateMany<BadWord>();
                 negativeWordRepositoryMock.Setup(x => x.GetAll())
                     .Returns(() => negativeWords.ToList());
             }
 
             [Test]
-            public void Filter_WhenFilteringContentWithBadWords_ShouldReturnFilteredContent()
+            public void Filter_WhenFilteringContentWithBadWords_ShouldReturnFilteredContentWithExpectedDisplayHash()
             {
                 // Arrange
+                content = "Test";
                 negativeWords = new List<BadWord>
                 {
                     fixture.Build<BadWord>()
                         .With(x => x.Name, content)
-                        .With(x => x.FilterName, filter)
                         .Create()
                 };
                 IBadWordResolver subject = fixture.Create<BadWordResolver>();
@@ -168,7 +166,7 @@ namespace Domain.Test.Unit.Resolvers
                 var actual = subject.Filter(content);
 
                 // Assert
-                Assert.That(actual, Is.EqualTo(filter));
+                Assert.That(actual, Is.EqualTo("T##t"));
             }
         }
     }

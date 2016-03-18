@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Text;
 using Domain.Models;
 using Domain.Repository;
 
@@ -53,7 +54,24 @@ namespace Domain.Resolvers
 
             return badWordsRepository.GetAll()
                 .Where(negativeWord => content.Contains(negativeWord.Name))
-                .Aggregate(content, (current, badWord) => current.Replace(badWord.Name, badWord.FilterName));
+                .Aggregate(content, (current, badWord) => current.Replace(badWord.Name, DisplayHash(badWord.Name)));
+        }
+
+        private string DisplayHash(string name)
+        {
+            if (string.IsNullOrEmpty(name)||name.Length < 2)
+            {
+                return name;
+            }
+            StringBuilder result = new StringBuilder();
+            int strLength = name.Length;
+            result.Append(name[0]); 
+            for (int i = 1; i < strLength-1; i++)
+            {
+                result.Append("#");
+            }
+            result.Append(name[strLength-1]);
+            return result.ToString();
         }
     }
 }
