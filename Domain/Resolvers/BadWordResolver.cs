@@ -34,12 +34,8 @@ namespace Domain.Resolvers
                 throw new ArgumentNullException(nameof(badWords));
             }
 
-            foreach (
-                var badWord in
-                    badWords.Where(
-                        badWord =>
-                            !badWordsRepository.Contains(
-                                item => item.Name.Equals(badWord.Name, StringComparison.OrdinalIgnoreCase))))
+            foreach (var badWord in badWords.Where(badWord =>
+                !badWordsRepository.Contains(item => item.Name.Equals(badWord.Name))))
             {
                 badWordsRepository.Add(badWord);
             }

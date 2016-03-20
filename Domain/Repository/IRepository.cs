@@ -7,6 +7,6 @@ namespace Domain.Repository
     {
         IReadOnlyList<TModel> GetAll();
         void Add(params TModel[] models);
-        bool Contains(Func<TModel,bool> search);
-    }
+        bool Contains(Predicate<TModel> match);
+     }
 }

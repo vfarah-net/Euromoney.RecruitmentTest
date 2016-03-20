@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Domain.Repository
 {
@@ -18,9 +17,9 @@ namespace Domain.Repository
             modelsList.AddRange(models);
         }
 
-        public bool Contains(Func<TModel,bool> search)
+        public bool Contains(Predicate<TModel> match)
         {
-            return modelsList.Where(search).Any();
+            return modelsList.Exists(match);
         }
     }
 }
