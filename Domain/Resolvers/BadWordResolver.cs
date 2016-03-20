@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using Domain.Models;
@@ -29,11 +30,6 @@ namespace Domain.Resolvers
 
         public void AddBadWords(params BadWord[] badWords)
         {
-            if (badWords == null)
-            {
-                throw new ArgumentNullException(nameof(badWords));
-            }
-
             foreach (var badWord in badWords.Where(badWord =>
                 !badWordsRepository.Contains(item => item.Name.Equals(badWord.Name))))
             {
@@ -43,9 +39,9 @@ namespace Domain.Resolvers
 
         public string Filter(string content)
         {
-            if (content == null)
+            if (string.IsNullOrWhiteSpace(content))
             {
-                throw new ArgumentNullException(nameof(content));
+                throw new ArgumentException(string.Format(CultureInfo.InvariantCulture, "{0} is missing", nameof(content)));
             }
 
             return badWordsRepository.GetAll()
@@ -55,18 +51,18 @@ namespace Domain.Resolvers
 
         private string DisplayHash(string name)
         {
-            if (string.IsNullOrEmpty(name)||name.Length < 2)
+            if (string.IsNullOrEmpty(name) || name.Length < 2)
             {
                 return name;
             }
             StringBuilder result = new StringBuilder();
             int strLength = name.Length;
-            result.Append(name[0]); 
-            for (int i = 1; i < strLength-1; i++)
+            result.Append(name[0]);
+            for (int i = 1; i < strLength - 1; i++)
             {
                 result.Append("#");
             }
-            result.Append(name[strLength-1]);
+            result.Append(name[strLength - 1]);
             return result.ToString();
         }
     }

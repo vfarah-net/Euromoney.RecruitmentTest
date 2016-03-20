@@ -149,6 +149,22 @@ namespace Domain.Test.Unit.Resolvers
                     .Returns(() => badWords.ToList());
             }
 
+            [TestCase(null)]
+            [TestCase("")]
+            [TestCase(" ")]
+            public void Filter_WhenFilteringWithBadContent_ShouldThrowArgumentException(string contentUnderTest)
+            {
+                // Arrange
+                IBadWordResolver subject = fixture.Create<BadWordResolver>();
+
+                // Act
+                TestDelegate act = () => subject.Filter(contentUnderTest);
+
+                // Assert
+                var actualException = Assert.Throws<ArgumentException>(act);
+                Assert.That(actualException.Message, Is.EqualTo("content is missing"));
+            }
+
             [Test]
             public void Filter_WhenFilteringContentWithHorribleAsBadWord_ShouldReturnFilterContentWithExpectedFirstLetterAndDisplayHashesInBetweenWithLastLetterOnly()
             {

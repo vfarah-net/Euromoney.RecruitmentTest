@@ -51,11 +51,9 @@ namespace ContentConsole.Test.Unit
             public void Constructor_WhenCalled_ShouldInitializeTheMandatoryBadWordList()
             {
                 // Arrange
-
                 IApplicationShell subject = fixture.Create<BadWordConsoleApplication>();
 
                 // Act
-
                 subject.Run(ignoreFiltering);
 
                 // Assert
@@ -67,11 +65,9 @@ namespace ContentConsole.Test.Unit
             public void Run_WhenCalled_ShouldGetBadWordCount()
             {
                 // Arrange
-
                 IApplicationShell subject = fixture.Create<BadWordConsoleApplication>();
 
                 // Act
-
                 subject.Run(ignoreFiltering);
 
                 // Assert
@@ -82,11 +78,9 @@ namespace ContentConsole.Test.Unit
             public void Run_WhenCalledWithFiltering_ShouldCallBadWordFilter()
             {
                 // Arrange
-
                 IApplicationShell subject = fixture.Create<BadWordConsoleApplication>();
 
                 // Act
-
                 subject.Run(ignoreFiltering: false);
 
                 // Assert
@@ -97,11 +91,9 @@ namespace ContentConsole.Test.Unit
             public void Run_WhenCalledWithFilteringTurnedOff_ShouldNotUtiliseBadWordFilter()
             {
                 // Arrange
-
                 IApplicationShell subject = fixture.Create<BadWordConsoleApplication>();
 
                 // Act
-
                 subject.Run(ignoreFiltering: true);
 
                 // Assert
