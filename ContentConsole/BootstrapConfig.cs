@@ -15,6 +15,10 @@ namespace ContentConsole
             windsorContainer.Kernel.Resolver.AddSubResolver(new CollectionResolver(windsorContainer.Kernel));
             windsorContainer.Register(Component.For<IWindsorContainer>().Instance(windsorContainer));
             windsorContainer.Install(new BadWordResolverInstaller());
+            windsorContainer.Register(
+                Component.For<IApplicationShell>()
+                .ImplementedBy<BadWordConsoleApplication>()
+                .LifestyleSingleton());
             return windsorContainer;
         }
     }

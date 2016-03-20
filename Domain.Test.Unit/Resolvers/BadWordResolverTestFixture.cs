@@ -69,7 +69,7 @@ namespace Domain.Test.Unit.Resolvers
                 IBadWordResolver subject = fixture.Create<BadWordResolver>();
 
                 // Act
-                var actual = subject.GetBadWordCount(content);
+                subject.GetBadWordCount(content);
 
                 // Assert
                 negativeWordRepositoryMock.Verify(x => x.GetAll(), Times.Once());
@@ -138,23 +138,23 @@ namespace Domain.Test.Unit.Resolvers
         private class FilterTestFixture : BadWordResolverTestFixture
         {
             private string content;            
-            private IEnumerable<BadWord> negativeWords;
+            private IEnumerable<BadWord> badWords;
 
             [SetUp]
             public void SetUp()
             {
                 content = fixture.Create<string>();
-                negativeWords = fixture.CreateMany<BadWord>();
+                badWords = fixture.CreateMany<BadWord>();
                 negativeWordRepositoryMock.Setup(x => x.GetAll())
-                    .Returns(() => negativeWords.ToList());
+                    .Returns(() => badWords.ToList());
             }
 
             [Test]
-            public void Filter_WhenFilteringContentWithBadWords_ShouldReturnFilteredContentWithExpectedDisplayHash()
+            public void Filter_WhenFilteringContentWithHorribleAsBadWord_ShouldReturnFilterContentWithExpectedFirstLetterAndDisplayHashesInBetweenWithLastLetterOnly()
             {
                 // Arrange
-                content = "Test";
-                negativeWords = new List<BadWord>
+                content = "Horrible";
+                badWords = new List<BadWord>
                 {
                     fixture.Build<BadWord>()
                         .With(x => x.Name, content)
@@ -166,7 +166,51 @@ namespace Domain.Test.Unit.Resolvers
                 var actual = subject.Filter(content);
 
                 // Assert
-                Assert.That(actual, Is.EqualTo("T##t"));
+                Assert.That(actual, Is.EqualTo("H######e"));
+            }
+
+            [Test]
+            public void Filter_WhenFilteringContentWithAOneLetterBadWord_ShouldReturnTheOneLetterOnlyNotHashed()
+            {
+                // Arrange
+                string badWord = "T";
+                content = badWord;
+
+                badWords = new List<BadWord>
+                {
+                    fixture.Build<BadWord>()
+                        .With(x => x.Name, content)
+                        .Create()
+                };
+                IBadWordResolver subject = fixture.Create<BadWordResolver>();
+
+                // Act
+                var actual = subject.Filter(content);
+
+                // Assert
+                Assert.That(actual, Is.EqualTo(badWord));
+            }
+
+            [Test]
+            public void Filter_WhenFilteringContentWithATwoLetterBadWord_ShouldReturnTheTwoLettersOnlyNotHashed()
+            {
+                // Arrange
+                string badWord = "TE";
+                content = badWord;
+
+                badWords = new List<BadWord>
+                {
+                    fixture.Build<BadWord>()
+                        .With(x => x.Name, content)
+                        .Create()
+                };
+                IBadWordResolver subject = fixture.Create<BadWordResolver>();
+
+                // Act
+                var actual = subject.Filter(content);
+
+                // Assert
+                Assert.That(actual, Is.EqualTo(badWord));
             }
         }
     }
